@@ -1,19 +1,27 @@
 <script setup>
-const randomColors = ['#646cff', '#42b883', '#ff6e6e', '#ffcb6b']
-const currentColor = ref(randomColors[0])
-
 import { ref } from 'vue'
 import Form from './form/Form.vue'
+import FormConfig from './form/FormConfig.js'
+import { required } from './form/rules';
 
 defineProps({
   msg: String,
 })
 
-const count = ref(0)
+const config = ref(new FormConfig(
+  [{
+    name: 'name',
+    label: 'Name',
+    type: 'text',
+    placeholder: 'Enter your name',
+    required: true,
+    rules: [required]
+  }]
+));
+
 </script>
 
 <template>
   <h1>{{ msg }}</h1>
-
-    <Form />
+    <Form :config="config"/>
 </template>
