@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import Form from './form/Form.vue'
 import FormConfig from './form/FormConfig.js'
+import ListConfig from './form/list/ListConfig.js'
 import { required } from './form/rules';
 
 defineProps({
@@ -16,6 +17,21 @@ const config = ref(new FormConfig(
     placeholder: 'Enter your name',
     required: true,
     rules: [required]
+  },
+  {
+    name: 'name',
+    label: 'Name',
+    type: 'list',
+    config: new ListConfig([
+          { 
+          key: 'email', 
+          title: 'Email',
+          type: 'email',
+          placeholder: 'Enter your email',
+          required: true,
+          rules: [required]
+          },
+        ])
   }]
 ));
 

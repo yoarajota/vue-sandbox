@@ -2,9 +2,9 @@ import { reactive } from "vue";
 
 const dataObject = reactive({});
 
-const initializeVModel = (name) => {
+const initializeFormFieldVModel = (name) => {
   dataObject[name] = "";
   return dataObject[name];
 };
 
-export { initializeVModel };
+export { initializeFormFieldVModel };
