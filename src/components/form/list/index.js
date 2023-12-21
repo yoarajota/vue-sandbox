@@ -1,4 +1,4 @@
-import { reactive } from "vue";
+import { ref } from "vue";
 
 const dataObject = ref({});
 

@@ -16,8 +16,6 @@ function phone(message) {
   );
 }
 
-function matches(object, propertyPath, message) {}
-
 function maxLength(length, message) {
   if (!message) {
     message = `Max ${length} characters allowed.`;
@@ -35,7 +33,6 @@ function minLength(length, message) {
 }
 
 function required(message) {
-  console.log(message);
   if (!message) {
     return "This field is required.";
   }
@@ -51,4 +48,4 @@ function username(message) {
   return /^[a-zA-Z0-9_]+$/.test(message) ? true : message;
 }
 
-export { email, phone, matches, maxLength, minLength, required, username };
+export { email, phone, maxLength, minLength, required, username };
