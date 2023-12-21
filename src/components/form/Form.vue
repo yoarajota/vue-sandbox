@@ -1,13 +1,12 @@
 <template>
     <VForm @submit.prevent="submit">
-        <template v-for="field in fields" :key="field.key">
+        <template v-for="field in fields" :key="field.key">]
             <Field
                 v-if="field.type !== 'list'"
                 :field="field"
-                @input="input(field.key, trace, $event.target.value)"
-                :getValue="getValue(field.key, trace)"
+                v-model="dataObject[field.table??LKey][field.key]"
             />
-            <List v-else :trace="trace" :LKey="field.key" :config="field.config" />
+            <List v-else :LKey="field.key" :config="field.config" :events="events" />
         </template>
         <VBtn type='submit' color="primary">Primary</VBtn>
     </VForm>
@@ -15,26 +14,63 @@
 
 <script setup>
 import Field from './Field.vue';
-import { input, dataObject, getValue } from './index'
+import { dataObject, resetForm } from './index'
 import List from './list/List.vue';
+import { onBeforeMount, watch } from 'vue'
 
 const props = defineProps({
     fields: {
         type: Array, 
         required: true
     },
-    trace: {
-        type: [Array, null],
-        default: null
-    },
-    isListForm: {
-        type: Boolean,
+    LKey: {
+        type: [String, Boolean],
         default: false
+    },
+    events: {
+        type: Object,
     }
 })
 
+const emit = defineEmits(['listSave'])
+
 const submit = () => {
-    emit('submit', dataObject)
+    if (props.LKey) {
+        emit('listSave', dataObject)
+        return;
+    }
+
+    props.events.submit(dataObject)
 }
+
+onBeforeMount(() => {
+    console.log(props.LKey)
+
+    if (props.LKey) {
+        if (!dataObject[props.LKey]) {
+            dataObject[props.LKey] = {
+                'data_array': []
+            }
+            
+            for (const field of props.fields) {
+                dataObject[props.LKey][field.key] = field.default ?? ''
+            }
+        }
+    } else {
+        for (const field of props.fields) {
+            if (field.type === 'list') {
+                continue;
+            }
+
+            if (!dataObject[field.table]) {
+                dataObject[field.table] = {}
+            }
+
+            dataObject[field.table][field.key] = field.default ?? ''
+
+            console.log(dataObject)
+        }
+    }
+})
 
 </script>

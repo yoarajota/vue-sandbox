@@ -7,8 +7,6 @@
         :placeholder="field.placeholder"
         :required="field.required"
         :rules="field.rules"
-        :v-model="VModel"
-        :class="class"
         v-bind="props"
     />
 </template>
@@ -17,4 +15,6 @@
     const props = defineProps({
         field: Object,
     })
+
+    console.log(props)
 </script>

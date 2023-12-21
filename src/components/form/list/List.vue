@@ -1,24 +1,22 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onBeforeMount } from 'vue';
 import Form from '../Form.vue';
-import { listPush, getValue } from '../index'
+import { listPush, dataObject } from '../index'
 
 const props = defineProps({
     config: {
         type: Object,
         required: true
     },
-    trace: {
-        type: [Array, null],
-        default: null
-    },
     LKey: {
         type: String,
         required: true
+    },
+    events: {
+        type: Object,
+        required: true
     }
 })
-
-const currentTrace = [...(props.trace ?? []), props.LKey]
 const dialog = ref(false)
 
 const save = () => {
@@ -49,7 +47,7 @@ const save = () => {
               </v-card-title>
               <v-card-text>
                 <v-container>
-                  <Form isListForm @submit="save" :trace="currentTrace" v-bind="config.getBind()" />
+                  <Form :LKey="LKey" @listSave="save" v-bind="config.getBind()" />
                 </v-container>
               </v-card-text>
               <v-card-actions>
@@ -61,7 +59,7 @@ const save = () => {
         <!-- List -->
         <VDataTable
             :headers="config?.fields"
-            :items="(getValue(LKey, trace))?.data_array"
+            :items="dataObject[LKey]?.data_array"
             :items-per-page="15"
             class="elevation-1"
         ></VDataTable>

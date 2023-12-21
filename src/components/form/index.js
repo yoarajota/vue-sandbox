@@ -1,24 +1,7 @@
-import { result, mapValues, set } from "lodash";
-import { reactive  } from "vue";
+import { mapValues } from "lodash";
+import { reactive, watch } from "vue";
 
-const dataObject = reactive({});
-
-const input = (name, trace = null, value) => {
-  if (trace) {
-    set(dataObject, [...trace, name], value);
-    return;
-  }
-  
-  dataObject[name] = value;
-};
-
-const getValue = (name, trace = null) => {
-  if (trace) {
-    return result(dataObject, [...trace, name]);
-  }
-
-  return dataObject[name];
-};
+let dataObject = reactive({});
 
 function listPush(key) {
   if (!dataObject[key]?.data_array) {
@@ -37,4 +20,10 @@ function listPush(key) {
   dataObject[key].data_array.push(toPush);
 }
 
-export { input, getValue, listPush, dataObject };
+function resetForm() {
+  for (let key in dataObject) {
+    dataObject[key] = "";
+  }
+}
+
+export { listPush, resetForm, dataObject };

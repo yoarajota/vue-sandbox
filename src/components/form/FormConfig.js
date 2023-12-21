@@ -1,6 +1,6 @@
 export default class FormConfig {
   fields = [];
-  on = [];
+  on = {};
   constructor(fields) {
     this.fields = fields;
   }

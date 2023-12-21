@@ -4,10 +4,6 @@ import Form from './form/Form.vue'
 import FormConfig from './form/FormConfig.js'
 import { required } from './form/rules';
 
-defineProps({
-  msg: String,
-})
-
 let config = {}
 onBeforeMount(() => {
   config = ref(new FormConfig(
@@ -16,6 +12,7 @@ onBeforeMount(() => {
       label: 'Name',
       type: 'text',
       placeholder: 'Enter your name',
+      table: 'user',
       required: true,
       rules: [required]
     },
@@ -30,6 +27,7 @@ onBeforeMount(() => {
               type: 'email',
               placeholder: 'Enter your email',
               required: true,
+              default: 'uai',
               rules: [required]
             },
           ])
@@ -52,6 +50,5 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <h1>{{ msg }}</h1>
-    <Form v-on="config.getEvents()" v-bind="config.getBind()"/>
+    <Form :events="config.getEvents()" v-bind="config.getBind()" />
 </template>
