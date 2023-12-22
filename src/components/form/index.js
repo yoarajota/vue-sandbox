@@ -9,13 +9,12 @@ function listPush(key) {
   }
 
   const toPush = {};
-  // PUSH EVERY ATTRIBUTE, MINUS 'data_array'
-  dataObject[key] = mapValues(dataObject[key], function(value, mapKey) {
-    if (mapKey === 'data_array') return value;
+  dataObject[key] = mapValues(dataObject[key], function (value, mapKey) {
+    if (mapKey === "data_array") return value;
 
     toPush[mapKey] = value;
     return "";
-  })  
+  });
 
   dataObject[key].data_array.push(toPush);
 }

@@ -21,16 +21,16 @@ onBeforeMount(() => {
       label: 'Email',
       type: 'list',
       config: new FormConfig([
-            { 
-              key: 'email', 
-              title: 'Email',
-              type: 'email',
-              placeholder: 'Enter your email',
-              required: true,
-              default: 'uai',
-              rules: [required]
-            },
-          ])
+        {
+          key: 'email',
+          title: 'Email',
+          type: 'email',
+          placeholder: 'Enter your email',
+          required: true,
+          default: 'uai',
+          rules: [required]
+        },
+      ])
     }]
   ));
 
@@ -41,7 +41,7 @@ onBeforeMount(() => {
   config.value.on['LAdd'] = (data) => {
     console.log('LAdd', data)
   }
-  
+
   config.value.on['LRemove'] = (data) => {
     console.log('LRemove', data)
   }
@@ -50,5 +50,5 @@ onBeforeMount(() => {
 </script>
 
 <template>
-    <Form :events="config.getEvents()" v-bind="config.getBind()" />
+  <Form :events="config.getEvents()" v-bind="config.getBind()" />
 </template>

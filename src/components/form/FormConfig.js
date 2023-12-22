@@ -7,11 +7,11 @@ export default class FormConfig {
 
   getBind() {
     return {
-      fields: this.fields
-    }
+      fields: this.fields,
+    };
   }
 
   getEvents() {
-    return this.on
+    return this.on;
   }
 }
