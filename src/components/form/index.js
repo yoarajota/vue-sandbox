@@ -20,8 +20,14 @@ function listPush(key) {
 }
 
 function resetForm() {
-  for (let key in dataObject) {
-    dataObject[key] = "";
+  for (let table in dataObject) {
+    for (let key in dataObject[table]) {
+      if (key === 'data_array') {
+        dataObject[table][key] = [];
+      } else {
+        dataObject[table][key] = "";
+      }
+    }
   }
 }
 

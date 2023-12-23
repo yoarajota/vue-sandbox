@@ -3,6 +3,7 @@ import { ref, onBeforeMount } from 'vue'
 import Form from './form/Form.vue'
 import FormConfig from './form/FormConfig.js'
 import { required } from './form/rules';
+import supabase from '../lib/supabase';
 
 let config = {}
 onBeforeMount(() => {
@@ -20,6 +21,7 @@ onBeforeMount(() => {
       key: 'emails',
       label: 'Email',
       type: 'list',
+      min: 1,
       config: new FormConfig([
         {
           key: 'email',
@@ -35,6 +37,11 @@ onBeforeMount(() => {
   ));
 
   config.value.on['submit'] = (data) => {
+    supabase.from('user').insert(data).then(({ data, error }) => {
+      if (error) {
+        console.log(error)
+      }
+    })
     console.log('submit', data)
   }
 

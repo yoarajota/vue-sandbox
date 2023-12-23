@@ -1,6 +1,6 @@
 <template>
-  <VForm @submit.prevent="submit">
-    <template v-for="field in fields" :key="field.key">]
+  <VForm v-model="isFormValid" @submit.prevent="submit">
+    <template v-for="field in fields" :key="field.key">
       <Field v-if="field.type !== 'list'" :field="field" v-model="dataObject[field.table ?? LKey][field.key]" />
       <List v-else :LKey="field.key" :config="field.config" :events="events" />
     </template>
@@ -12,7 +12,9 @@
 import Field from "./Field.vue";
 import { dataObject, resetForm } from "./index";
 import List from "./list/List.vue";
-import { onBeforeMount, watch } from "vue";
+import { onBeforeMount, ref } from "vue";
+
+const isFormValid = ref(false)
 
 const props = defineProps({
   fields: {
@@ -31,12 +33,15 @@ const props = defineProps({
 const emit = defineEmits(["listSave"]);
 
 const submit = () => {
-  if (props.LKey) {
-    emit("listSave", dataObject);
-    return;
-  }
+  if (isFormValid.value) {
+    if (props.LKey) {
+      emit("listSave", dataObject);
+      return;
+    }
 
-  props.events.submit(dataObject);
+    resetForm();
+    props.events.submit(dataObject);
+  }
 };
 
 onBeforeMount(() => {
@@ -50,7 +55,11 @@ onBeforeMount(() => {
         dataObject[props.LKey][field.key] = field.default ?? "";
       }
     }
-
+    
+    for (const field of props.fields) {
+      dataObject[props.LKey][field.key] = field.default ?? "";
+    }
+    
     return;
   }
 
