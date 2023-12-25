@@ -1,28 +1,27 @@
 <script setup>
 import { ref, onBeforeMount } from 'vue'
-import Form from './form/Form.vue'
 import FormConfig from './form/FormConfig.js'
 import { required } from './form/rules';
 import supabase from '../lib/supabase';
+import BasicCRUD from './BasicCRUD.vue';
 
 let config = {}
 onBeforeMount(() => {
-  config = ref(new FormConfig(
+  config = ref(new FormConfig('users',
     [{
       key: 'name',
-      label: 'Name',
+      title: 'Name',
       type: 'text',
       placeholder: 'Enter your name',
-      table: 'user',
       required: true,
       rules: [required]
     },
     {
-      key: 'emails',
+      key: 'users_emails',
       label: 'Email',
       type: 'list',
       min: 1,
-      config: new FormConfig([
+      config: new FormConfig('users_emails', [
         {
           key: 'email',
           title: 'Email',
@@ -37,12 +36,15 @@ onBeforeMount(() => {
   ));
 
   config.value.on['submit'] = (data) => {
-    supabase.from('user').insert(data).then(({ data, error }) => {
+    supabase.from('users').insert(data.users).select().then(({ data, error }) => {
+      console.log(data, error)
+
       if (error) {
         console.log(error)
       }
     })
-    console.log('submit', data)
+
+    config.value.query()
   }
 
   config.value.on['LAdd'] = (data) => {
@@ -57,5 +59,5 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <Form :events="config.getEvents()" v-bind="config.getBind()" />
+  <BasicCRUD :button="{ text: 'Insert new user' }" :config="config" />
 </template>

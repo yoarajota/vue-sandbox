@@ -31,4 +31,20 @@ function resetForm() {
   }
 }
 
-export { listPush, resetForm, dataObject };
+function redefineListObject(key, fields) {
+  if (!dataObject[key]) {
+      dataObject[key] = {
+        data_array: [],
+      };
+
+      for (const field of fields) {
+        dataObject[key][field.key] = field.default ?? "";
+      }
+    }
+    
+    for (const field of fields) {
+      dataObject[key][field.key] = field.default ?? "";
+    }
+}
+
+export { listPush, resetForm, dataObject, redefineListObject };
