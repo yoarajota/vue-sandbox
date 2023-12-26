@@ -3,7 +3,7 @@
 import Field from "./Field.vue";
 import { dataObject, resetForm, redefineListObject } from "./index";
 import List from "./list/List.vue";
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref, mergeProps } from "vue";
 
 const isFormValid = ref(false)
 const error = ref(false)
@@ -89,7 +89,7 @@ onBeforeMount(() => {
 <template>
   <VDialog v-model="dialog" width="1024">
     <template v-slot:activator="{ props }">
-      <VBtn v-bind="{ ...props, ...button }" />
+      <VBtn v-bind="mergeProps(props, button)" />
     </template>
 
     <VCard>

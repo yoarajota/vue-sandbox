@@ -37,8 +37,6 @@ onBeforeMount(() => {
 
   config.value.on['submit'] = (data) => {
     supabase.from('users').insert(data.users).select().then(({ data, error }) => {
-      console.log(data, error)
-
       if (error) {
         console.log(error)
       }
