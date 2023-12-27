@@ -23,12 +23,15 @@ export default class FormConfig {
   }
 
   getIndexHeader() {
-    return [{
-      key: "action",
-      title: "Action",
-      sortable: false,
-      align: 'center',
-    }, ...this.fields.filter((field) => field.type !== "list")];
+    return [
+      {
+        key: "action",
+        title: "Action",
+        sortable: false,
+        align: "center",
+      },
+      ...this.fields.filter((field) => field.type !== "list"),
+    ];
   }
 
   setItems(data) {

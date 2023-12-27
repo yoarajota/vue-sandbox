@@ -1,11 +1,10 @@
 <script setup>
 import Form from './form/Form.vue';
 import { onBeforeMount } from 'vue';
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
-
-console.log(router)
+const route = useRoute()
 
 const props = defineProps({
     config: {
@@ -23,7 +22,7 @@ const action = [
         'title': 'Edit',
         'icon': 'mdi-pencil',
         'action': (id) => {
-            router.push(`/${id}`)
+            router.push(`/users/${id}`)
         },
     },
     {
@@ -38,6 +37,12 @@ const action = [
     }
 ]
 
+function handleDialog(value) {
+    if (!value) {
+        router.push('/users')
+    }
+}
+
 onBeforeMount(() => {
     props.config.query()
 })
@@ -46,7 +51,8 @@ onBeforeMount(() => {
 
 <template>
     <VToolbar flat>
-        <Form :button="button" :events="config.getEvents()" v-bind="config.getBind()" />
+        <Form :key="route.params.id" :id="route.params.id" :button="button" :events="config.getEvents()"
+            v-bind="config.getBind()" @update:dialog="handleDialog" />
         <VSpacer />
     </VToolbar>
 
@@ -57,14 +63,12 @@ onBeforeMount(() => {
                     <VBtn icon="mdi-dots-horizontal" v-bind="props" />
                 </template>
                 <VList>
-                    <VListItem v-for="(item, index) in action" :key="index" class="cursor-pointer hover:opacity-60"
-                        @click="item.action(item.id)">
-                        <template v-slot:prepend="{ isActive }">
-                            <v-icon :icon="item.icon"></v-icon>
+                    <VListItem v-for="(button, index) in action" :key="index" class="cursor-pointer hover:opacity-60"
+                        @click="button.action(item.id)">
+                        <template v-slot:prepend="{ }">
+                            <v-icon :icon="button.icon"></v-icon>
                         </template>
-                        <VListItemContent>
-                            <VListItemTitle v-text="item.title" />
-                        </VListItemContent>
+                        <VListItemTitle v-text="button.title" />
                     </VListItem>
                 </VList>
             </VMenu>

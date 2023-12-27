@@ -3,12 +3,16 @@
 import Field from "./Field.vue";
 import { dataObject, resetForm, redefineListObject } from "./index";
 import List from "./list/List.vue";
-import { onBeforeMount, ref, mergeProps } from "vue";
+import { onBeforeMount, ref, mergeProps, watch } from "vue";
 
 const isFormValid = ref(false)
 const error = ref(false)
 
 const props = defineProps({
+  id: {
+    type: [String, Number],
+    default: null,
+  },
   fields: {
     type: Array,
     required: true,
@@ -30,7 +34,7 @@ const props = defineProps({
 
 const dialog = ref(false)
 
-const emit = defineEmits(["listSave"]);
+const emit = defineEmits(["listSave", "update:dialog"]);
 
 const setError = (message) => {
   error.value = message;
@@ -59,13 +63,21 @@ const submit = () => {
       return;
     }
 
-    props.events.submit(dataObject);
-    dialog.value = false;
-    resetForm();
-  }
+    props.events.submit(dataObject).then(() => {
+      dialog.value = false;
+      resetForm();
+    });
+
+  } re
 };
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
+  if (props.id) {
+    await props.events.find(dataObject, props.id);
+    dialog.value = true;
+    return;
+  }
+
   if (props.LKey) {
     redefineListObject(props.LKey, props.fields)
 
@@ -84,7 +96,12 @@ onBeforeMount(() => {
     dataObject[field.table ?? props.table][field.key] = field.default ?? "";
   }
 });
-</script>
+
+watch(dialog, value => {
+  emit("update:dialog", value)
+})
+
+</script> 
 
 <template>
   <VDialog v-model="dialog" width="1024">
@@ -99,12 +116,13 @@ onBeforeMount(() => {
             <h4 v-if="error" class="text-center text-red-600">{{ error }}</h4>
           </div>
           <template v-for="field in fields" :key="field.key">
-            <Field v-if="field.type !== 'list'" :field="field" v-model="dataObject[field.table ?? LKey ?? table][field.key]" />
+            <Field v-if="field.type !== 'list'" :field="field"
+              v-model="dataObject[field.table ?? LKey ?? table][field.key]" />
             <List v-else :LKey="field.key" :config="field.config" :events="events" />
           </template>
           <VCardActions class="flex">
             <VSpacer />
-            <VBtn type="submit" color="primary">Primary</VBtn>
+            <VBtn type="submit" color="primary">Save</VBtn>
           </VCardActions>
         </VForm>
       </VCardText>
