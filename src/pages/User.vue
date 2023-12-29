@@ -3,8 +3,8 @@ import { ref, onBeforeMount } from 'vue'
 import FormConfig from '../components/form/FormConfig.js'
 import { required } from '../components/form/rules';
 import BasicCRUD from '../components/BasicCRUD.vue';
-import supabase from '../lib/supabase';
 import { defaultFormDataFind } from '../components/form/index'
+import supabase from '../lib/supabase';
 
 const P_TABLE = 'users'
 
@@ -38,19 +38,35 @@ onBeforeMount(() => {
     }]
   ));
 
-  config.value.setLists(['users_emails'])
+  config.value.on['submit'] = async (submitData) => {
+    const { data, error } = await supabase
+      .from(P_TABLE)
+      .insert(submitData[P_TABLE])
+      .select("id")
+      .limit(1)
+      .single();
 
-  config.value.on['LAdd'] = (data) => {
-    console.log('LAdd', data)
+    for (const table of ['users_emails']) {
+      if (submitData[table]) {
+        for (const list of submitData[table].data_array) {
+          list.user_id = data.id;
+          supabase.from(table).insert(list);
+        }
+      }
+    }
+
+    config.value.query();
   }
 
-  config.value.on['LRemove'] = (data) => {
-    console.log('LRemove', data)
+  config.value.on['delete'] = async (id) => {
+    await supabase.from(P_TABLE).delete().match({ id });
+    config.value.query();
   }
 
   config.value.on['find'] = async (dataObject, id) => {
     await defaultFormDataFind(dataObject, P_TABLE, id)
   }
+
 })
 
 </script>

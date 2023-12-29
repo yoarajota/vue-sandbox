@@ -1,35 +1,11 @@
+import { reactive } from "vue";
 import supabase from "../../lib/supabase";
 
 export default class FormConfig {
   fields = [];
   form_table = "";
-  on = {
-    submit: async (submitData) => {
-      const { data, error } = await supabase
-        .from(this.form_table)
-        .insert(submitData[this.form_table])
-        .select("id")
-        .limit(1)
-        .single();
-
-      for (const table of this.lists) {
-        if (submitData[table]) {
-          for (const list of submitData[table].data_array) {
-            list.user_id = data.id;
-            supabase.from(table).insert(list);
-          }
-        }
-      }
-
-      this.query();
-    },
-    delete: async (id) => {
-      await supabase.from(this.form_table).delete().match({ id });
-      this.query();
-    },
-  };
+  on = {};
   items = [];
-  lists = [];
 
   constructor(table, fields) {
     this.form_table = table;
@@ -47,10 +23,6 @@ export default class FormConfig {
     return this.on;
   }
 
-  setLists(lists) {
-    this.lists = lists;
-  }
-
   getIndexHeader() {
     return [
       {
@@ -63,8 +35,12 @@ export default class FormConfig {
     ];
   }
 
-  setItems(data) {
-    this.items = data;
+  setItems(items) {
+    this.items = items;
+  }
+
+  getItems() {
+    return this.items;
   }
 
   query() {
@@ -77,6 +53,7 @@ export default class FormConfig {
           return;
         }
 
+        console.log(data);
         this.setItems(data);
       });
   }

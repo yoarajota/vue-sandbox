@@ -68,7 +68,7 @@ const submit = () => {
       resetForm();
     });
 
-  } re
+  }
 };
 
 onBeforeMount(async () => {

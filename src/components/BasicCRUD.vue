@@ -58,8 +58,8 @@ onBeforeMount(() => {
         <VSpacer />
     </VToolbar>
 
-    {{ props.config.items.length }}
-    <VDataTable :headers="config?.getIndexHeader()" :items="props.config.items" :items-per-page="15" class="elevation-1">
+    <VDataTable :headers="config?.getIndexHeader()" :items="config.getItems()"
+        :items-per-page="15" class="elevation-1">
         <template v-slot:item.action="{ index, item }">
             <VMenu>
                 <template v-slot:activator="{ props }">
