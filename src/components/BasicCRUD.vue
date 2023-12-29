@@ -28,7 +28,9 @@ const action = [
     {
         'title': 'Delete',
         'icon': 'mdi-delete',
-        'action': 'delete',
+        'action': (id) => {
+            props.config.on.delete(id)
+        },
     },
     {
         'title': 'View',
@@ -56,6 +58,7 @@ onBeforeMount(() => {
         <VSpacer />
     </VToolbar>
 
+    {{ props.config.items.length }}
     <VDataTable :headers="config?.getIndexHeader()" :items="props.config.items" :items-per-page="15" class="elevation-1">
         <template v-slot:item.action="{ index, item }">
             <VMenu>

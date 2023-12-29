@@ -38,20 +38,7 @@ onBeforeMount(() => {
     }]
   ));
 
-  config.value.on['submit'] = async (submitData) => {
-    const { data, error } = await supabase.from(P_TABLE).insert(submitData[P_TABLE]).select('id').limit(1).single();
-
-    for (const table of ['users_emails']) {
-      if (submitData[table]) {
-        for (const list of submitData[table].data_array) {
-          list.user_id = data.id
-          supabase.from(table).insert(list)
-        }
-      }
-    }
-
-    config.value.query()
-  }
+  config.value.setLists(['users_emails'])
 
   config.value.on['LAdd'] = (data) => {
     console.log('LAdd', data)
