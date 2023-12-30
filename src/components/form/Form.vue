@@ -88,10 +88,6 @@ onBeforeMount(async () => {
   initializeForm(props.fields, props.table);
 });
 
-onUnmounted(() => {
-  killDataObject();
-});
-
 </script> 
 
 <template>

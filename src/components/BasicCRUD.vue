@@ -2,6 +2,7 @@
 import Form from './form/Form.vue';
 import { onBeforeMount, ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
+import { initializeForm } from './form/index'
 
 const router = useRouter()
 const route = useRoute()
@@ -25,7 +26,11 @@ const dialogStatusRef = ref(false)
 
 watch(dialogStatusRef, (value) => {
     if (value === false) {
-        router.push("/users")
+        initializeForm(props.config.fields, props.config.form_table);
+
+        if (route.params.id) {
+            router.push("/users")
+        }
     }
 })
 
