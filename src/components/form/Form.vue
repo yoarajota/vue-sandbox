@@ -31,7 +31,7 @@ const props = defineProps({
     type: Object,
   },
   dialogStatusRef: {
-    type: Object,
+    type: Boolean,
     required: true,
   },
 });
@@ -69,7 +69,6 @@ const submit = () => {
       emit("update:dialogStatus", false);
       resetForm();
     });
-
   }
 };
 

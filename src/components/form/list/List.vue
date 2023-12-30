@@ -3,7 +3,7 @@ import Form from '../Form.vue';
 import { listPush, dataObject, redefineListObject } from '../index'
 import { ref, onBeforeMount } from 'vue'
 
-const activatorRef = ref()
+const dialogStatusRef = ref(false)
 
 const props = defineProps({
   config: {
@@ -28,17 +28,29 @@ const save = () => {
 onBeforeMount(() => {
   props.config.setActions([
     {
-      title: 'Edit',
+      title: 'Edit/View',
       icon: 'mdi-pencil',
       action: (item) => {
-        console.log(activatorRef)
-        activatorRef.value.click()
+        dialogStatusRef.value = true
+
+        // Find the index of this item
+        const index = dataObject[props.LKey].data_array.findIndex((element) => element === item)
+
+        item.array_index = index
+        Object.assign(dataObject[props.LKey], item);
       }
-    }
+    },
+    {
+      title: "Delete",
+      icon: "mdi-delete",
+      action: (item) => {
+        // Delete the item using filter function
+
+        dataObject[props.LKey].data_array = dataObject[props.LKey].data_array.filter((element) => element !== item)
+      }
+    },
   ])
 })
-
-const dialogStatusRef = ref(false)
 
 </script>
 
@@ -46,8 +58,8 @@ const dialogStatusRef = ref(false)
   <!-- Toolbar -->
   <VToolbar flat>
     <VSpacer />
-    <Form :activatorRef="activatorRef" :button="{ icon: 'mdi-plus' }" :LKey="LKey" @listSave="save"
-      v-bind="config.getBind()" :dialogStatusRef="dialogStatusRef" @update:dialogStatus="dialogStatusRef = $event" />
+    <Form :button="{ icon: 'mdi-plus' }" :LKey="LKey" @listSave="save" v-bind="config.getBind()"
+      :dialogStatusRef="dialogStatusRef" @update:dialogStatus="dialogStatusRef = $event" />
   </VToolbar>
 
   <!-- List -->
@@ -59,8 +71,8 @@ const dialogStatusRef = ref(false)
           <VBtn icon="mdi-dots-horizontal" v-bind="props" />
         </template>
         <VList>
-          <VListItem v-for="(button, index) in config.getActions()" :key="index" class="cursor-pointer hover:opacity-60"
-            @click="button.action(item)">
+          <VListItem v-for="(button, btn_index) in config.getActions()" :key="index + '-' + btn_index"
+            class="cursor-pointer hover:opacity-60" @click="button.action(item)">
             <template v-slot:prepend="{ }">
               <v-icon :icon="button.icon"></v-icon>
             </template>

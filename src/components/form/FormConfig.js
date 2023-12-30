@@ -7,6 +7,7 @@ export default class FormConfig {
   on = {};
   items = [];
   actions = [];
+  list_info = {};
 
   constructor(table, fields) {
     this.form_table = table;
@@ -69,6 +70,14 @@ export default class FormConfig {
 
   getActions() {
     return this.actions;
+  }
+
+  setListInfo(object) {
+    this.list_info = object;
+  }
+
+  getListInfo() {
+    return this.list_info;
   }
 
   query() {

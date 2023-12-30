@@ -1,6 +1,6 @@
 <script setup>
 import Form from './form/Form.vue';
-import { onBeforeMount, ref } from 'vue';
+import { onBeforeMount, ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
@@ -22,6 +22,12 @@ onBeforeMount(() => {
 })
 
 const dialogStatusRef = ref(false)
+
+watch(dialogStatusRef, (value) => {
+    if (value === false) {
+        router.push("/users")
+    }
+})
 
 </script>
 

@@ -4,7 +4,7 @@ import FormConfig from '../components/form/FormConfig.js'
 import ListConfig from '../components/form/list/ListConfig.js'
 import { required } from '../components/form/rules';
 import BasicCRUD from '../components/BasicCRUD.vue';
-import { defaultFormDataFind } from '../components/form/index'
+import { defaultFormDataFind, defaultFormDataListFind, defaultSubmit } from '../components/form/index'
 import supabase from '../lib/supabase';
 
 const P_TABLE = 'users'
@@ -39,22 +39,13 @@ onBeforeMount(() => {
     }]
   ));
 
-  config.value.on['submit'] = async (submitData) => {
-    const { data, error } = await supabase
-      .from(P_TABLE)
-      .insert(submitData[P_TABLE])
-      .select("id")
-      .limit(1)
-      .single();
+  config.value.setListInfo({
+    tables: ['users_emails'],
+    foreign_key: 'user_id'
+  })
 
-    for (const table of ['users_emails']) {
-      if (submitData[table]) {
-        for (const list of submitData[table].data_array) {
-          list.user_id = data.id;
-          supabase.from(table).insert(list);
-        }
-      }
-    }
+  config.value.on['submit'] = async (submitData) => {
+    await defaultSubmit(submitData, config);
 
     config.value.query();
   }
@@ -65,7 +56,12 @@ onBeforeMount(() => {
   }
 
   config.value.on['find'] = async (dataObject, id) => {
-    await defaultFormDataFind(dataObject, P_TABLE, id)
+    // Put both in promise.all
+
+    await Promise.all([
+      defaultFormDataFind(P_TABLE, id),
+      defaultFormDataListFind(dataObject, config.value.getListInfo(), id)
+    ])
   }
 
 })
