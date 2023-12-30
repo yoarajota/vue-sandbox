@@ -45,7 +45,7 @@ onBeforeMount(() => {
   })
 
   config.value.on['submit'] = async (submitData) => {
-    await defaultSubmit(submitData, config);
+    await defaultSubmit(submitData, config.value);
 
     config.value.query();
   }

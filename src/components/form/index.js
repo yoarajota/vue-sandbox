@@ -29,6 +29,24 @@ function listPush(key) {
   dataObject[key].data_array.push(toPush);
 }
 
+function killDataObject() {
+  dataObject = {};
+}
+
+function initializeForm(fields, table) {
+  for (const field of fields) {
+    if (field.type === "list") {
+      continue;
+    }
+
+    if (!dataObject[field.table ?? table]) {
+      dataObject[field.table ?? table] = {};
+    }
+
+    dataObject[field.table ?? table][field.key] = field.default ?? "";
+  }
+}
+
 function resetForm() {
   for (let table in dataObject) {
     for (let key in dataObject[table]) {
@@ -130,4 +148,6 @@ export {
   defaultFormDataFind,
   defaultFormDataListFind,
   defaultSubmit,
+  initializeForm,
+  killDataObject,
 };

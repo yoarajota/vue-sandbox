@@ -1,9 +1,9 @@
 
 <script setup>
 import Field from "./Field.vue";
-import { dataObject, resetForm, redefineListObject } from "./index";
+import { dataObject, resetForm, redefineListObject, killDataObject, initializeForm } from "./index";
 import List from "./list/List.vue";
-import { onBeforeMount, ref, mergeProps, watch } from "vue";
+import { onBeforeMount, ref, mergeProps, onUnmounted } from "vue";
 
 const isFormValid = ref(false)
 const error = ref(false)
@@ -85,17 +85,11 @@ onBeforeMount(async () => {
     return;
   }
 
-  for (const field of props.fields) {
-    if (field.type === "list") {
-      continue;
-    }
+  initializeForm(props.fields, props.table);
+});
 
-    if (!dataObject[field.table ?? props.table]) {
-      dataObject[field.table ?? props.table] = {};
-    }
-
-    dataObject[field.table ?? props.table][field.key] = field.default ?? "";
-  }
+onUnmounted(() => {
+  killDataObject();
 });
 
 </script> 
