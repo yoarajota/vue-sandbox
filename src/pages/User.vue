@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onBeforeMount } from 'vue'
 import FormConfig from '../components/form/FormConfig.js'
+import ListConfig from '../components/form/list/ListConfig.js'
 import { required } from '../components/form/rules';
 import BasicCRUD from '../components/BasicCRUD.vue';
 import { defaultFormDataFind } from '../components/form/index'
@@ -24,7 +25,7 @@ onBeforeMount(() => {
       label: 'Email',
       type: 'list',
       min: 1,
-      config: new FormConfig('users_emails', [
+      config: new ListConfig('users_emails', [
         {
           key: 'email',
           title: 'Email',

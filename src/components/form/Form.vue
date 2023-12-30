@@ -29,12 +29,14 @@ const props = defineProps({
   },
   button: {
     type: Object,
-  }
+  },
+  dialogStatusRef: {
+    type: Object,
+    required: true,
+  },
 });
 
-const dialog = ref(false)
-
-const emit = defineEmits(["listSave", "update:dialog"]);
+const emit = defineEmits(["listSave", "update:dialogStatus"]);
 
 const setError = (message) => {
   error.value = message;
@@ -59,12 +61,12 @@ const submit = () => {
   if (isFormValid.value) {
     if (props.LKey) {
       emit("listSave", dataObject);
-      dialog.value = false;
+      emit("update:dialogStatus", false);
       return;
     }
 
     props.events.submit(dataObject).then(() => {
-      dialog.value = false;
+      emit("update:dialogStatus", false);
       resetForm();
     });
 
@@ -72,15 +74,15 @@ const submit = () => {
 };
 
 onBeforeMount(async () => {
-  if (props.id) {
-    await props.events.find(dataObject, props.id);
-    dialog.value = true;
-    return;
-  }
-
   if (props.LKey) {
     redefineListObject(props.LKey, props.fields)
 
+    return;
+  }
+
+  if (props.id) {
+    await props.events.find(dataObject, props.id);
+    emit("update:dialogStatus", true);
     return;
   }
 
@@ -97,14 +99,10 @@ onBeforeMount(async () => {
   }
 });
 
-watch(dialog, value => {
-  emit("update:dialog", value)
-})
-
 </script> 
 
 <template>
-  <VDialog v-model="dialog" width="1024">
+  <VDialog :modelValue="dialogStatusRef" @update:modelValue="val => $emit('update:dialogStatus', val)" width="1024">
     <template v-slot:activator="{ props }">
       <VBtn v-bind="mergeProps(props, button)" />
     </template>
