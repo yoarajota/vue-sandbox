@@ -18,7 +18,15 @@ onBeforeMount(() => {
       type: 'text',
       placeholder: 'Enter your name',
       required: true,
-      rules: [required]
+      rules: [required],
+      sizing: {
+        cols: 12,
+        sm: 6
+      },
+      filter_sizing: {
+        cols: 12,
+        sm: 12
+      },
     },
     {
       key: 'users_emails',

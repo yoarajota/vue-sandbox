@@ -8,6 +8,7 @@ export default class FormConfig {
   items = [];
   actions = [];
   list_info = {};
+  query_filter = {};
 
   constructor(table, fields) {
     this.form_table = table;
@@ -81,15 +82,18 @@ export default class FormConfig {
   }
 
   query() {
-    supabase
-      .from(this.form_table)
-      .select()
-      .then(({ data, error }) => {
-        if (error) {
-          return;
-        }
+    const q = supabase.from(this.form_table).select();
 
-        this.setItems(data);
-      });
+    for (const key in this.query_filter) {
+      q.ilike(key, this.query_filter[key] + "%");
+    }
+
+    q.then(({ data, error }) => {
+      if (error) {
+        return;
+      }
+
+      this.setItems(data);
+    });
   }
 }

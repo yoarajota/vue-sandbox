@@ -3,6 +3,7 @@ import Form from './form/Form.vue';
 import { onBeforeMount, ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
 import { initializeForm } from './form/index'
+import BasicCRUDFilter from './BasicCRUDFilter.vue';
 
 const router = useRouter()
 const route = useRoute()
@@ -34,6 +35,8 @@ watch(dialogStatusRef, (value) => {
     }
 })
 
+const filterModel = ref([])
+
 </script>
 
 <template>
@@ -41,7 +44,11 @@ watch(dialogStatusRef, (value) => {
         <Form :key="route.params.id" :id="route.params.id" :button="button" :events="config.getEvents()"
             v-bind="config.getBind()" :dialogStatusRef="dialogStatusRef" @update:dialogStatus="dialogStatusRef = $event" />
         <VSpacer />
+        <VBtn icon="mdi-filter" @click="() => filterModel = filterModel?.[0] ? [] : ['filter']" />
     </VToolbar>
+
+    <BasicCRUDFilter :modelValue="filterModel" :config="config" @update:show="showFilter = $event"
+        @update:modelValue="filterModel = $event" />
 
     <VDataTable :headers="config?.getIndexHeader()" :items="config.getItems()" :items-per-page="15" class="elevation-1">
         <template v-slot:item.action="{ index, item }">
@@ -51,7 +58,7 @@ watch(dialogStatusRef, (value) => {
                 </template>
                 <VList>
                     <VListItem v-for="(button, index) in config.getActions()" :key="index"
-                        class="cursor-pointer hover:opacity-60" @click="button.action(item.id)">
+                        class="cursor-pointer hover:opacity-60" @click="() => button.action(item.id)">
                         <template v-slot:prepend="{ }">
                             <v-icon :icon="button.icon"></v-icon>
                         </template>

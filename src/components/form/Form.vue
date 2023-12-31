@@ -103,9 +103,14 @@ onBeforeMount(async () => {
             <h4 v-if="error" class="text-center text-red-600">{{ error }}</h4>
           </div>
           <template v-for="field in fields" :key="field.key">
-            <Field v-if="field.type !== 'list'" :field="field"
-              v-model="dataObject[field.table ?? LKey ?? table][field.key]" />
-            <List v-else :LKey="field.key" :config="field.config" :events="events" />
+            <VRow no-gutters>
+              <Field v-if="field.type !== 'list'" :field="field"
+                @update:modelValue="dataObject[field.table ?? LKey ?? table][field.key] = $event"
+                :modelValue="dataObject[field.table ?? LKey ?? table][field.key]" />
+              <VCol v-else cols="12">
+                <List :LKey="field.key" :config="field.config" :events="events" />
+              </VCol>
+            </VRow>
           </template>
           <VCardActions class="flex">
             <VSpacer />

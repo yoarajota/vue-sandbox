@@ -72,7 +72,7 @@ onBeforeMount(() => {
         </template>
         <VList>
           <VListItem v-for="(button, btn_index) in config.getActions()" :key="index + '-' + btn_index"
-            class="cursor-pointer hover:opacity-60" @click="button.action(item)">
+            class="cursor-pointer hover:opacity-60" @click="() => button.action(item)">
             <template v-slot:prepend="{ }">
               <v-icon :icon="button.icon"></v-icon>
             </template>
