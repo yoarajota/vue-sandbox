@@ -121,7 +121,7 @@ async function defaultFormDataFind(table, id) {
   dataObject[table] = data;
 }
 
-async function defaultFormDataListFind(dataObj, { tables, foreign_key }, id) {
+async function defaultFormDataListFind({ tables, foreign_key }, id) {
   const promises = [];
 
   for (const table of tables) {
@@ -140,6 +140,10 @@ async function defaultFormDataListFind(dataObj, { tables, foreign_key }, id) {
   await Promise.all(promises);
 }
 
+async function deleteAll(config, arrayIds) {
+  await supabase.from(config.form_table).delete().in("id", arrayIds);
+}
+
 export {
   dataObject,
   listPush,
@@ -150,4 +154,5 @@ export {
   defaultSubmit,
   initializeForm,
   killDataObject,
+  deleteAll,
 };

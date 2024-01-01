@@ -9,6 +9,8 @@ export default class FormConfig {
   actions = [];
   list_info = {};
   query_filter = {};
+  page = 1;
+  querying = false;
 
   constructor(table, fields) {
     this.form_table = table;
@@ -65,6 +67,10 @@ export default class FormConfig {
     return this.items;
   }
 
+  pushItems(items) {
+    this.items.push(...items);
+  }
+
   setActions(actions) {
     this.actions = actions;
   }
@@ -81,11 +87,26 @@ export default class FormConfig {
     return this.list_info;
   }
 
-  query() {
+  query(type = "push") {
+    this.querying = true;
+
     const q = supabase.from(this.form_table).select();
 
     for (const key in this.query_filter) {
       q.ilike(key, this.query_filter[key] + "%");
+    }
+
+    if (this.itemsPerPage !== undefined && this.page !== undefined) {
+      const from = (this.page - 1) * this.itemsPerPage;
+      const to = from + this.itemsPerPage;
+
+      q.range(from, to);
+    }
+
+    if (this.sortBy?.[0]) {
+      for (const toSort of this.sortBy) {
+        q.order(toSort.key, { ascending: toSort.order === "asc" });
+      }
     }
 
     q.then(({ data, error }) => {
@@ -93,7 +114,8 @@ export default class FormConfig {
         return;
       }
 
-      this.setItems(data);
+      this[type + "Items"](data);
+      this.querying = false;
     });
   }
 }

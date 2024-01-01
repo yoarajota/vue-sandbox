@@ -32,7 +32,7 @@ const props = defineProps({
 const fields = props.config.fields.filter((field) => field.type !== "list")
 
 function submit() {
-    props.config.query();
+    props.config.query('set');
     emit('update:modelValue', [])
 }
 </script>
