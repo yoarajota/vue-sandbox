@@ -6,10 +6,14 @@ import { required } from '../components/form/rules';
 import BasicCRUD from '../components/cruds/basic/BasicCRUD.vue';
 import { defaultFormDataFind, defaultFormDataListFind, defaultSubmit } from '../components/form/index'
 import supabase from '../lib/supabase';
+import { handleError } from '../helpers';
 
 const P_TABLE = 'users'
 
+const error = ref(false)
+
 let config = {}
+
 onBeforeMount(() => {
   config = ref(new FormConfig(P_TABLE,
     [{
@@ -55,26 +59,43 @@ onBeforeMount(() => {
   })
 
   config.value.on['submit'] = async (submitData) => {
-    await defaultSubmit(submitData, config.value);
-
-    config.value.query('set');
+    try {
+      await defaultSubmit(submitData, config.value);
+      config.value.query('set');
+    } catch (err) {
+      handleError(error, err.message);
+    }
   }
 
   config.value.on['delete'] = async (id) => {
-    await supabase.from(P_TABLE).delete().match({ id });
+    const { error: supabaseError } = await supabase.from(P_TABLE).delete().match({ id });
+
+    if (supabaseError) {
+      handleError(error, supabaseError.message);
+      return;
+    }
+
     config.value.query('set');
   }
 
   config.value.on['find'] = async (dataObject, id) => {
-    await Promise.all([
-      defaultFormDataFind(P_TABLE, id),
-      defaultFormDataListFind(config.value.getListInfo(), id)
-    ])
+    try {
+      await Promise.all([
+        defaultFormDataFind(P_TABLE, id),
+        defaultFormDataListFind(config.value.getListInfo(), id)
+      ])
+    } catch (err) {
+      handleError(error, err.message);
+    }
   }
 })
+
+function updateError(message) {
+  handleError(error, message)
+}
 
 </script>
 
 <template>
-  <BasicCRUD :button="{ text: 'Insert new user' }" :config="config" />
+  <BasicCRUD :error="error" @update:error="updateError" :button="{ text: 'Insert new user' }" :config="config" />
 </template>

@@ -4,6 +4,7 @@ import Field from "./Field.vue";
 import { dataObject, resetForm, redefineListObject, killDataObject, initializeForm } from "./index";
 import List from "./list/List.vue";
 import { onBeforeMount, ref, mergeProps, onUnmounted } from "vue";
+import { handleError } from '../../helpers'
 
 const isFormValid = ref(false)
 const error = ref(false)
@@ -38,20 +39,13 @@ const props = defineProps({
 
 const emit = defineEmits(["listSave", "update:dialogStatus"]);
 
-const setError = (message) => {
-  error.value = message;
-  setTimeout(() => {
-    error.value = false;
-  }, 3000);
-};
-
 const submit = () => {
   // Test if min is valid
   if (!props.LKey) {
     for (const field of props.fields) {
       if (field.type === "list") {
         if (field.min && (dataObject?.[field.key]?.data_array?.length ?? 0) < field.min) {
-          setError(`You need to add at least ${field.min} ${field.min > 1 ? "items" : "item"}`)
+          handleError(error, `You need to add at least ${field.min} ${field.min > 1 ? "items" : "item"}`)
           return;
         }
       }

@@ -1,10 +1,13 @@
 <script setup>
 import Form from '../../form/Form.vue';
-import { ref, watch } from 'vue';
+import { ref, watch, toRef } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
 import { initializeForm, deleteAll } from '../../form/index'
 import BasicCRUDFilter from './BasicCRUDFilter.vue';
+import { handleError } from '../../../helpers'
 
+
+const emit = defineEmits(['update:error'])
 const router = useRouter()
 const route = useRoute()
 
@@ -15,6 +18,10 @@ const props = defineProps({
     },
     button: {
         type: Object,
+        required: true
+    },
+    error: {
+        type: String,
         required: true
     }
 })
@@ -68,13 +75,21 @@ const filterModel = ref([])
 const select = ref([])
 
 async function toDelete() {
-    await deleteAll(props.config, select.value);
-    props.config.setItems(props.config.items.filter(item => !select.value.includes(item.id)))
+    try {
+        await deleteAll(props.config, select.value);
+        props.config.setItems(props.config.items.filter(item => !select.value.includes(item.id)))
+    } catch (err) {
+        emit('update:error', err.message)
+    }
 }
 
 </script>
 
 <template>
+    <div class="h-12">
+        <h4 v-if="error" class="text-center text-red-600">{{ error }}</h4>
+    </div>
+
     <VToolbar flat>
         <Form :key="route.params.id" :id="route.params.id" :button="button" :events="config.getEvents()"
             v-bind="config.getBind()" :dialogStatusRef="dialogStatusRef" @update:dialogStatus="dialogStatusRef = $event" />

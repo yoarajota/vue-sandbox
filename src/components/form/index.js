@@ -83,6 +83,10 @@ async function defaultSubmit(submitData, config) {
     .limit(1)
     .single();
 
+  if (error) {
+    throw Error(error.message);
+  }
+
   const promises = [];
   for (const table of config.getListInfo().tables) {
     if (submitData[table]) {
@@ -92,7 +96,16 @@ async function defaultSubmit(submitData, config) {
           ids.push(list.id);
         }
         list.user_id = data.id;
-        promises.push(supabase.from(table).upsert(list));
+        promises.push(
+          supabase
+            .from(table)
+            .upsert(list)
+            .then(({ error }) => {
+              if (error) {
+                throw Error(error.message);
+              }
+            })
+        );
       }
 
       if (ids.length > 0) {
@@ -102,6 +115,11 @@ async function defaultSubmit(submitData, config) {
             .delete()
             .eq("user_id", data.id)
             .not("id", "in", "(" + ids.join(",") + ")")
+            .then(({ error }) => {
+              if (error) {
+                throw Error(error.message);
+              }
+            })
         );
       }
     }
@@ -118,6 +136,10 @@ async function defaultFormDataFind(table, id) {
     .limit(1)
     .single();
 
+  if (error) {
+    throw Error(error.message);
+  }
+
   dataObject[table] = data;
 }
 
@@ -131,6 +153,10 @@ async function defaultFormDataListFind({ tables, foreign_key }, id) {
         .select()
         .eq(foreign_key, id)
         .then(({ data, error }) => {
+          if (error) {
+            throw Error(error.message);
+          }
+
           dataObject[table] = {};
           dataObject[table].data_array = data;
         })
@@ -141,7 +167,14 @@ async function defaultFormDataListFind({ tables, foreign_key }, id) {
 }
 
 async function deleteAll(config, arrayIds) {
-  await supabase.from(config.form_table).delete().in("id", arrayIds);
+  const { error } = await supabase
+    .from(config.form_table)
+    .delete()
+    .in("name", arrayIds);
+
+  if (error) {
+    throw Error(error.message);
+  }
 }
 
 export {
