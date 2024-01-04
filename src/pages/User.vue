@@ -33,6 +33,34 @@ onBeforeMount(() => {
       },
     },
     {
+      key: 'status',
+      title: 'Status',
+      type: 'select',
+      placeholder: 'Enter your name',
+      required: true,
+      rules: [required],
+      'item-value': "value",
+      'item-title': "text",
+      items: [
+        {
+          text: 'Active',
+          value: 1
+        },
+        {
+          text: 'Inactive',
+          value: 2
+        }
+      ],
+      sizing: {
+        cols: 12,
+        sm: 6
+      },
+      filter_sizing: {
+        cols: 12,
+        sm: 12
+      },
+    },
+    {
       key: 'users_emails',
       label: 'Email',
       type: 'list',

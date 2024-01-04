@@ -1,6 +1,6 @@
 
 <script setup>
-import Field from "./Field.vue";
+import Field from "../fields/Field.vue";
 import { dataObject, resetForm, redefineListObject, killDataObject, initializeForm } from "./index";
 import List from "./list/List.vue";
 import { onBeforeMount, ref, mergeProps, onUnmounted } from "vue";
@@ -98,11 +98,12 @@ onBeforeMount(async () => {
           </div>
           <template v-for="field in fields" :key="field.key">
             <VRow no-gutters>
-              <Field v-if="field.type !== 'list'" :field="field"
-                @update:modelValue="dataObject[field.table ?? LKey ?? table][field.key] = $event"
-                :modelValue="dataObject[field.table ?? LKey ?? table][field.key]" />
-              <VCol v-else cols="12">
+              <VCol v-if="field.type === 'list'" cols="12">
                 <List :LKey="field.key" :config="field.config" :events="events" />
+              </VCol>
+              <VCol v-else v-bind="field.sizing">
+                <Field :field="field" @update:modelValue="dataObject[field.table ?? LKey ?? table][field.key] = $event"
+                  :modelValue="dataObject[field.table ?? LKey ?? table][field.key]" />
               </VCol>
             </VRow>
           </template>

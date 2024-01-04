@@ -4,8 +4,6 @@ import { ref, watch, toRef } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
 import { initializeForm, deleteAll } from '../../form/index'
 import BasicCRUDFilter from './BasicCRUDFilter.vue';
-import { handleError } from '../../../helpers'
-
 
 const emit = defineEmits(['update:error'])
 const router = useRouter()

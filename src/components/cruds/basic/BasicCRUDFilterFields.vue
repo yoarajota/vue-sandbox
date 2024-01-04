@@ -1,11 +1,13 @@
 <template>
     <VCol v-bind="field.filter_sizing ?? field.sizing">
-        <VTextField :name="field.key" :label="field.title" :type="field.type" :modelValue="modelValue"
-            @update:modelValue="$emit('update:modelValue', $event)" v-on="listeners" hide-details single-line
+        <Field :field="{ ...field, 'hide-details': true, 'single-line': true }"
+            @update:modelValue="$emit('update:modelValue', $event)" :modelValue="modelValue" v-on="listeners"
             @keydown.enter="enterFunc" />
     </VCol>
 </template>
 <script setup>
+import Field from '../../fields/Field.vue';
+
 const props = defineProps({
     field: Object,
     modelValue: [String, Number, Array, Boolean],
