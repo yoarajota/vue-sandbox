@@ -116,6 +116,10 @@ onBeforeMount(() => {
       handleError(error, err.message);
     }
   }
+
+  config.value.on['fieldChange'] = async (dataObject, fieldKey, value) => {
+    return false;
+  }
 })
 
 function updateError(message) {
