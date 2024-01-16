@@ -8,6 +8,7 @@ import "@mdi/font/css/materialdesignicons.css";
 import { createRouter, createWebHashHistory } from "vue-router";
 import User from "../src/pages/User.vue";
 import HelloWorld from "../src/pages/HelloWorld.vue";
+import ChatRoom from "../src/pages/ChatRoom.vue";
 
 const vuetify = createVuetify({
   icons: {
@@ -29,6 +30,10 @@ const routes = [
     path: "/users/:id?",
     component: User,
   },
+  {
+    path: "/chat",
+    component: ChatRoom,
+  }
 ];
 
 const router = createRouter({
