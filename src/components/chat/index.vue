@@ -21,18 +21,25 @@ const modelMessage = ref('')
 
 const messages = ref([])
 
-const allChanges = supabase
-  .channel('schema-db-changes')
-  .on(
-    'postgres_changes',
-    {
-      event: "INSERT",
-      schema: 'public',
-      table: 'messages'
-    },
-    (payload) => messages.value.push(payload.new)
-  )
-  .subscribe()
+const channel = supabase
+    .channel('schema-db-changes')
+    .on(
+        'postgres_changes',
+        {
+            event: "INSERT",
+            schema: 'public',
+            table: 'messages'
+        },
+        (payload) => messages.value.push(payload.new)
+    )
+
+onMounted(() => {
+    channel.subscribe()
+})
+
+onUnmounted(() => {
+    channel.unsubscribe()
+})
 
 
 function submit() {
