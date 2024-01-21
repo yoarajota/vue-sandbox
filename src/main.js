@@ -9,6 +9,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import User from "../src/pages/User.vue";
 import HelloWorld from "../src/pages/HelloWorld.vue";
 import ChatRoom from "../src/pages/ChatRoom.vue";
+import EditRoom from "../src/pages/EditRoom.vue";
 
 const vuetify = createVuetify({
   icons: {
@@ -33,7 +34,11 @@ const routes = [
   {
     path: "/chat",
     component: ChatRoom,
-  }
+  },
+  {
+    path: "/edit",
+    component: EditRoom,
+  },
 ];
 
 const router = createRouter({
