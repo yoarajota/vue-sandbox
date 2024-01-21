@@ -1,20 +1,38 @@
 <template>
-    <p contenteditable 
-    @keydown="italic"
-    @input="() => {}">
-        as
+    <p contenteditable @keydown="bold" @input="() => { }">
+        1laskdçla asçdlkasçld0oo 213sa
     </p>
 </template>
 <script setup>
 
+function bold(event) {
+    if (event.ctrlKey && event.key === 'b') {
+        event.preventDefault();
+        var selection = window.getSelection();
+        var range = selection.getRangeAt(0);
+        var parentElement = range.commonAncestorContainer.parentElement;
 
-// Function to if press cntrl I, in a contenteditable element, puts <i> tag arround string selected
-function italic(event) {
-    var selection = window.getSelection().toString();
-    var text = document.querySelector('p').innerHTML;
-    var newText = text.replace(selection, '<i>' + selection + '</i>');
-    document.querySelector('p').innerHTML = newText;
+        if (range.startOffset !== range.endOffset) {
+            if (parentElement.tagName === 'B' || parentElement.tagName === 'DIV') {
+                // If the selected text is already bold, remove the <b> tags
+                var newText = document.createTextNode(parentElement.textContent);
+                parentElement.replaceWith(newText);
+            } else {
+                // If the selected text is not bold, add the <b> tags
+                var boldNode = document.createElement('b');
+                boldNode.appendChild(document.createTextNode(range.toString()));
+                range.deleteContents();
+                range.insertNode(boldNode);
+            }
+
+            var boldTags = document.querySelectorAll('b');
+            boldTags.forEach(tag => {
+                if (tag.textContent.trim() === '') {
+                    tag.remove();
+                }
+            });
+        }
+    }
 }
-
 
 </script>
