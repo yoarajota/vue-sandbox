@@ -16,7 +16,7 @@ await import('./a.vue').then((a) => {
 })
 
 const click = () => {
-  import('./'+SEAR.value+'.vue').then((b) => {
+  import('./' + SEAR.value +  '.vue').then((b) => {
     curr.value = b.default
   })
 }
