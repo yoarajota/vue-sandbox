@@ -13,7 +13,7 @@
 </template>
   
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref } from 'vue';
 
 let items = ref(['Item 1', 'Item 2', 'Item 3']); // replace with your actual data
 let draggedIndex = ref(null);
