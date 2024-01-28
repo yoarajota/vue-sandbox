@@ -11,6 +11,8 @@ import HelloWorld from "../src/pages/HelloWorld.vue";
 import ChatRoom from "../src/pages/ChatRoom.vue";
 import EditRoom from "../src/pages/EditRoom.vue";
 import GrabRoom from "../src/pages/GrabRoom.vue";
+import FrameRoom from "../src/pages/FrameRoom.vue";
+import FrameRoom2 from "../src/pages/FrameRoom2.vue";
 
 const vuetify = createVuetify({
   icons: {
@@ -43,6 +45,14 @@ const routes = [
   {
     path: "/edit",
     component: EditRoom,
+  },
+  {
+    path: "/frame-room",
+    component: FrameRoom,
+  },
+  {
+    path: "/frame-room-2",
+    component: FrameRoom2,
   },
 ];
 
