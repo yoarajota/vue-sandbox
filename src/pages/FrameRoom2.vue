@@ -2,6 +2,9 @@
     {{ state }}
 asd
     <input type="text" @change="onChange"/>
+    <br />
+    <br />
+    <input type="text" v-model="text"/>
 </template>
 
 <script setup>
@@ -15,4 +18,6 @@ function onChange(event) {
 onMounted(() => {
     state = window.parent.init()
 })
+
+const text = window.parent.text
 </script>
