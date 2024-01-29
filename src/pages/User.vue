@@ -7,6 +7,7 @@ import BasicCRUD from '../components/cruds/basic/BasicCRUD.vue';
 import { defaultFormDataFind, defaultFormDataListFind, defaultSubmit } from '../components/form/index'
 import supabase from '../lib/supabase';
 import { handleError } from '../helpers';
+import job_positions from '../jsons/job_positions';
 
 const P_TABLE = 'users'
 
@@ -22,6 +23,25 @@ onBeforeMount(() => {
       type: 'text',
       placeholder: 'Enter your name',
       required: true,
+      rules: [required],
+      sizing: {
+        cols: 12,
+        sm: 6
+      },
+      filter_sizing: {
+        cols: 12,
+        sm: 12
+      },
+    },
+    {
+      key: "job_position",
+      title: "Job Position",
+      type: "foreign",
+      placeholder: "Enter your job position",
+      foreign_table: "job_positions",
+      required: true,
+      mask_field: "name",
+      headers: job_positions,
       rules: [required],
       sizing: {
         cols: 12,
