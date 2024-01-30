@@ -1,23 +1,48 @@
 <template>
-    {{ state }}
-asd
-    <input type="text" @change="onChange"/>
-    <br />
-    <br />
-    <input type="text" v-model="text"/>
+    <div>
+        <p >{{ state.a.text }}</p>
+        <ul>
+            <li v-for="item in state.a.items">{{ item.text }}</li>
+        </ul>
+    </div>
+
+    <button @click="handleToggle">{{ toggle }}</button>
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 
-let state;
-function onChange(event) {
-    state.value.name = event.target.value
+const state = reactive({
+    a: {}
+})
+
+const toggle = ref(false)
+
+window.setState = (obj) => {
+    for (const key in obj.a) {
+        state.a[key] = obj.a[key]
+    }
+}
+
+window.setToggle = (value) => {
+    toggle.value = value
+}
+
+function handleToggle() {
+    toggle.value = !toggle.value
+    parent.setToggle(toggle.value)
 }
 
 onMounted(() => {
-    state = window.parent.init()
+    const obj = parent.init()
+    
+    for (const key in obj.state) {
+        state[key] = obj.state[key]
+    }
+
+    console.log(state)
+
+    toggle.value = obj.toggle
 })
 
-const text = window.parent.text
 </script>

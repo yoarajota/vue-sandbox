@@ -1,21 +1,34 @@
 <template>
-    {{ state.name }}
-    {{ text }}
-
-    <div class="w-full h-full">
-        <iframe src="/#/frame-room-2" height="50%" />
-    </div>
+    <iframe ref="frame" src="/#/frame-room-2" width="100%" height="100%" />
+    <input v-model="state.a.text" />
+    <button @click="toggle = !toggle; frame.contentWindow.setToggle(toggle)">{{ toggle }}</button>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { reactive, ref, watch } from 'vue';
 
-const state = ref({})
-const text = ref("")
-window.init = () => {
-    return state
+const frame = ref(null)
+
+const state = reactive({
+    a: {
+        text: 'Hello World',
+        items: [{
+            text: 'Hello World'
+        }]
+    }
+})
+
+const toggle = ref(false)
+
+window.setToggle = (value) => {
+    toggle.value = value
 }
 
-window.text = text
+watch(state, () => {
+    frame.value.contentWindow.setState(state)
+}, { deep: true })
 
+window.init = () => {
+    return { state, toggle }
+}
 </script>
