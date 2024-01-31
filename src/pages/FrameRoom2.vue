@@ -1,12 +1,5 @@
 <template>
-  <div>
-    <p>{{ state.a.text }}</p>
-    <ul>
-      <li v-for="item in state.a.items">{{ item.text }}</li>
-    </ul>
-  </div>
-
-  dentro do iframe <input v-model="state.a.text" />
+  dentro do iframe <input v-model="state.a.text" />  {{ state.a.text }}
 </template>
 
 <script setup>

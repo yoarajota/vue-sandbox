@@ -1,5 +1,5 @@
 <template>
-  fora do iframe <input v-model="state.a.text" />
+  fora do iframe <input v-model="state.a.text" /> {{ state.a.text }}
   <iframe ref="frame" src="/#/frame-room-2" width="100%" height="100%" />
 </template>
 
