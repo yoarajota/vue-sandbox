@@ -1,34 +1,40 @@
 <template>
-    <iframe ref="frame" src="/#/frame-room-2" width="100%" height="100%" />
-    <input v-model="state.a.text" />
-    <button @click="toggle = !toggle; frame.contentWindow.setToggle(toggle)">{{ toggle }}</button>
+  fora do iframe <input v-model="state.a.text" />
+  <iframe ref="frame" src="/#/frame-room-2" width="100%" height="100%" />
 </template>
 
 <script setup>
 import { reactive, ref, watch } from 'vue';
+import { cloneDeep } from 'lodash'
 
 const frame = ref(null)
 
 const state = reactive({
-    a: {
-        text: 'Hello World',
-        items: [{
-            text: 'Hello World'
-        }]
-    }
+  a: {
+    text: 'Hello World',
+    items: [{
+      text: 'Hello World'
+    }]
+  }
 })
 
-const toggle = ref(false)
-
-window.setToggle = (value) => {
-    toggle.value = value
+window.init = () => {
+  frame.value.contentWindow.postMessage(cloneDeep(state), '*')
 }
+
+const avoidWatch = ref(false)
+
+window.addEventListener('message', (event) => {
+  avoidWatch.value = true
+  Object.assign(state.a, event.data.a)
+})
 
 watch(state, () => {
-    frame.value.contentWindow.setState(state)
-}, { deep: true })
+  if (avoidWatch.value) {
+    avoidWatch.value = false
+    return
+  }
 
-window.init = () => {
-    return { state, toggle }
-}
+  frame.value.contentWindow.postMessage(cloneDeep(state), '*')
+}, { deep: true })
 </script>

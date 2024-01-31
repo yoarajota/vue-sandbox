@@ -1,48 +1,39 @@
 <template>
-    <div>
-        <p >{{ state.a.text }}</p>
-        <ul>
-            <li v-for="item in state.a.items">{{ item.text }}</li>
-        </ul>
-    </div>
+  <div>
+    <p>{{ state.a.text }}</p>
+    <ul>
+      <li v-for="item in state.a.items">{{ item.text }}</li>
+    </ul>
+  </div>
 
-    <button @click="handleToggle">{{ toggle }}</button>
+  dentro do iframe <input v-model="state.a.text" />
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue';
+import { reactive, watch, ref, onMounted } from 'vue';
+import { cloneDeep } from 'lodash'
 
-const state = reactive({
-    a: {}
+let state = reactive({
+  a: {}
 })
 
-const toggle = ref(false)
+const avoidWatch = ref(false)
 
-window.setState = (obj) => {
-    for (const key in obj.a) {
-        state.a[key] = obj.a[key]
-    }
-}
+watch(state, () => {
+  if (avoidWatch.value) {
+    avoidWatch.value = false
+    return
+  }
 
-window.setToggle = (value) => {
-    toggle.value = value
-}
+  parent.postMessage(cloneDeep(state), '*')
+}, { deep: true })
 
-function handleToggle() {
-    toggle.value = !toggle.value
-    parent.setToggle(toggle.value)
-}
+window.addEventListener('message', (event) => {
+  avoidWatch.value = true
+  Object.assign(state.a, event.data.a)
+})
 
 onMounted(() => {
-    const obj = parent.init()
-    
-    for (const key in obj.state) {
-        state[key] = obj.state[key]
-    }
-
-    console.log(state)
-
-    toggle.value = obj.toggle
+  parent.init()
 })
-
 </script>
