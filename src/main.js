@@ -4,6 +4,7 @@ import App from "./App.vue";
 import { createVuetify } from "vuetify/lib/framework.mjs";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
+import * as style from "vuetify/styles";
 import "@mdi/font/css/materialdesignicons.css";
 import { createRouter, createWebHashHistory } from "vue-router";
 import User from "../src/pages/User.vue";
@@ -19,6 +20,7 @@ const vuetify = createVuetify({
     defaultSet: "mdi",
   },
   components,
+  style,
   directives,
   theme: {
     defaultTheme: "dark",
