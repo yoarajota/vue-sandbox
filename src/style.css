@@ -78,4 +78,5 @@ button:focus-visible {
 
 body {
   background-color: #242424;
+  position: relative  ;
 }
