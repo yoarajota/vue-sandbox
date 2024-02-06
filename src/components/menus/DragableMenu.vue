@@ -9,6 +9,7 @@
     </VCardTitle>
 
     <VCardText>
+      {{ text }}
     </VCardText>
     <div class="resize-handle cursor-ns-resize w-full h-2 bottom-0 bg-gray-400 absolute select-none"
       @mousedown="resizeStart" />
@@ -16,6 +17,11 @@
 </template>
   
 <script setup>
+
+defineProps({
+  text: String,
+});
+
 import { ref, reactive, onMounted, onBeforeUnmount } from 'vue';
 
 const resizableCard = ref(null);
