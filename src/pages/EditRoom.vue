@@ -25,7 +25,7 @@
         <div
             class="w-full pointer-events-none group-hover:pointer-events-auto z-70 relative group-hover:opacity-100 opacity-0">
             <button
-                class="bg-red-900 sm absolute -bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 !ring-0 !ring-offset-0 font-sans">
+                class="transform active:scale-95 transition-transform bg-red-900 sm absolute -bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 !ring-0 !ring-offset-0 font-sans">
                 <span>Add section</span>
             </button>
         </div>
